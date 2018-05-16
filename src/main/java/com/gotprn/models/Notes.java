@@ -22,7 +22,7 @@ Created Time 10:48:47 AM
 
 @Entity
 @Table(name="notes")
-public class Notes {
+public class Notes extends Auditing{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
