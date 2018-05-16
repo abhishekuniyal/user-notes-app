@@ -32,7 +32,8 @@ public class UserController {
 	}
 	
 	@PostMapping(value="/user",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public void saveUser(@RequestBody User user) {
+	public String saveUser(@RequestBody User user) {
 		userService.saveUser(user);
+		return "user saved";
 	}
 }

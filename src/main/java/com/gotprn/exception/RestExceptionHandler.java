@@ -1,5 +1,7 @@
 package com.gotprn.exception;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,4 +29,10 @@ public class RestExceptionHandler {
 		//return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 		return ex;
 	}
+	@ExceptionHandler(ConstraintViolationException.class)
+	protected ConstraintViolationException constraintViolationException(ConstraintViolationException ex) {
+		//return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+		return ex;
+	}
+	
 }

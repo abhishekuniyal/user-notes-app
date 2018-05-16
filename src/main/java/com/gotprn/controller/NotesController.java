@@ -31,8 +31,9 @@ public class NotesController {
 	private NotesService notesService;
 	
 	@PostMapping(value="/user/{userId}/notes",consumes=MediaType.APPLICATION_JSON_VALUE)
-	public void saveNotes(@PathVariable Long userId, @RequestBody Notes notes) throws GenericCustomException{
+	public String  saveNotes(@PathVariable Long userId, @RequestBody Notes notes) throws GenericCustomException{
 		notesService.saveNotes(userId, notes);
+		return "notes saved";
 	}
 	
 	@GetMapping(value="/user/{userId}/notes/{notesId}",produces=MediaType.APPLICATION_JSON_VALUE)
