@@ -27,7 +27,7 @@ public class NotesServiceImpl implements NotesService{
 	private NotesDao notesDao;
 
 	@Override
-	public void saveNotes(Long userId, Notes notes) {
+	public void saveNotes(Long userId, Notes notes) throws GenericCustomException{
 		LOGGER.debug("userId:"+userId);
 		notesDao.saveNotes(userId, notes);
 	}

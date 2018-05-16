@@ -31,19 +31,27 @@ public class NotesDaoImpl implements NotesDao{
 	private UserRepository userRepository;
 	
 	@Override
-	public void saveNotes(Long userId, Notes notes) {
+	public void saveNotes(Long userId, Notes notes) throws GenericCustomException {
 		LOGGER.debug("NotesDaoImpl::userId:"+userId);
-		notesRepository.save(notes);
+		//Check if User Exist then retreive the user object
+		//then map it over and set user is the Notes object along with the other values
+		//which are already coming from json
+		//then save the user
+		userRepository.findById(userId).map(user->{
+			notes.setUser(user);
+			return notesRepository.save(notes);
+		}).orElseThrow(()->new GenericCustomException("Userid Doesn't Exist"));
 	}
 
 	@Override
 	public Notes getNotesByUserIdAndNotesId(Long userId, Long notesId) throws GenericCustomException {
 		LOGGER.debug("NotesDaoImpl::userId:"+userId+":notesId:"+notesId);
-		if(!userRepository.existsById(userId))
+		if(!userRepository.existsById(userId)) //Check if userId is in user tables DB or Not
 			throw new GenericCustomException("User Id doesn't exist");
-		if(!notesRepository.existsById(notesId))
+		if(!notesRepository.existsById(notesId)) //Check if notesId is in notes table DB or Not
 			throw new GenericCustomException("Notes Id doesn't exist");
 		
+		//if user exist iterate then check if notes table has combination of userId and notesId
 		return userRepository.findById(userId).map(user->{
 			return notesRepository.findByIdAndUserId(notesId,userId);
 		}).orElseThrow(()->new GenericCustomException("User doesn't Own this Notes"));
@@ -62,6 +70,7 @@ public class NotesDaoImpl implements NotesDao{
 	public void updateNotes(Long userId, Long notesId, Notes notes) throws GenericCustomException {
 		LOGGER.debug("NotesDaoImpl::userId:"+userId+":notesId:"+notesId);
 		
+		//If userId,NotesId doesn't Exist return by throwing error
 		if(!userRepository.existsById(userId))
 			throw new GenericCustomException("USer Id doesn't exist");
 		if(!notesRepository.existsById(notesId))
@@ -69,6 +78,9 @@ public class NotesDaoImpl implements NotesDao{
 		if(notesRepository.findByIdAndUserId(notesId, userId) == null)
 			throw new GenericCustomException("User doesn't Own this Notes");
 		
+		//if notesId exist Iterate over thah user Object and set the new values 
+		//coming from request Body as JSON
+		//At last save the new generated previousNotes with new Values
 		notesRepository.findById(notesId).map(previousNotes->{
 			previousNotes.setCreatedAt(notes.getCreatedAt());
 			previousNotes.setNote(notes.getNote());
@@ -98,6 +110,7 @@ public class NotesDaoImpl implements NotesDao{
 		if(!userRepository.existsById(userId))
 			throw new GenericCustomException("USer Id doesn't exist");
 		
+		//Select all the records with userId and notesId combination and delete
 		notesRepository.deleteByUserId(userId);
 	}
 
