@@ -2,6 +2,8 @@ package com.gotprn.dao.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ Created Time 12:00:51 PM
 */
 
 @Repository
+@Transactional
 public class NotesDaoImpl implements NotesDao{
 
 	Logger LOGGER=LoggerFactory.getLogger(NotesDaoImpl.class);
